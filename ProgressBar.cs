@@ -16,7 +16,7 @@ public class ProgressBar : IDisposable, IProgress<double> {
 	private string currentText = string.Empty;
 	private bool disposed = false;
 	private int animationIndex = 0;
-
+	private string prefix = "";
 	public ProgressBar() {
 		timer = new Timer(TimerHandler);
 
@@ -33,17 +33,20 @@ public class ProgressBar : IDisposable, IProgress<double> {
 		value = Math.Max(0, Math.Min(1, value));
 		Interlocked.Exchange(ref currentProgress, value);
 	}
-
+	public void UpdatePrefix(string prefix)
+	{
+		this.prefix = prefix;
+	}
 	private void TimerHandler(object state) {
 		lock (timer) {
 			if (disposed) return;
 
-			int progressBlockCount = (int) (currentProgress * blockCount) - 1;
+			int progressBlockCount = (int) (currentProgress * blockCount);
 			int percent = (int) (currentProgress * 100);
-			string text = string.Format("[{0}{1}{2}] {3,4}%",
+			string text = string.Format(prefix + ": [{0}{1}{2}] {3,4}%",
 				new string('▬', progressBlockCount), 
                 animation[animationIndex++ % animation.Length],
-                new string(' ', blockCount - progressBlockCount),
+                new string(' ', blockCount - progressBlockCount).Remove(0,1),
 				percent);
 			UpdateText(text);
 
