@@ -13,7 +13,6 @@ public class Installer
     public enum InstallErrors {
         NOT_FOUND,
         FAILED_DOWNLOAD,
-        UNKNOWN,
         SUCCESS
     }
     public static  InstallErrors InstallPackage(string nn)
@@ -31,13 +30,18 @@ public class Installer
                 string tmp = Path.Combine(Path.GetTempPath(), ss);
                 Directory.CreateDirectory(tmp);
                 string tmpfile = Path.Combine(tmp, Guid.NewGuid().ToString());
-                web.DownloadFile(p.URL, tmpfile);
+                try
+                {
+                    web.DownloadFile(p.URL, tmpfile);
+                } catch{
+                    return InstallErrors.FAILED_DOWNLOAD;
+                }
                 ZipFile.ExtractToDirectory(tmpfile, tmp);
                 File.Delete(tmpfile);
-                Process.Start(tmp + "\\install.bat").WaitForExit();
-                Directory.Delete(tmp);
+                Process.Start($"cmd.exe", $"/c \"{Path.Combine(tmp, "install.bat")}\"").WaitForExit();
+                return InstallErrors.SUCCESS;
             }
         }
-        return InstallErrors.UNKNOWN;
+        return InstallErrors.NOT_FOUND;
     }
 }

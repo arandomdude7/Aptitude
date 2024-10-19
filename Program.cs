@@ -1,4 +1,7 @@
-﻿if (args[0] == "install")
+﻿using System.Text;
+
+Console.OutputEncoding = Encoding.UTF8;
+if (args[0] == "install")
 {
     using (ProgressBar bar = new ProgressBar())
     {

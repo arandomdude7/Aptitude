@@ -2,5 +2,9 @@
     {
         "Name": "sudo",
         "URL": "https://github.com/arandomdude7/WinPKG/raw/refs/heads/main/install.zip"
+    },
+    {
+        "Name": "apt",
+        "URL": "https://github.com/arandomdude7/WinPKG/raw/refs/heads/main/install.zip"
     }
 ]
